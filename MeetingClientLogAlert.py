@@ -90,38 +90,41 @@ def is_create_file(file,num):
             break
 
 if __name__ == '__main__':
-    temp_list = []
-    while_str = True
-    while while_str:
-        new_log_file = find_new_file(dir_name, file_name)
-        temp_list.append(new_log_file)
-        for item in temp_list:
-            if temp_list.count(item) >= 4:
+    try:
+        temp_list = []
+        while_str = True
+        while while_str:
+            new_log_file = find_new_file(dir_name, file_name)
+            temp_list.append(new_log_file)
+            for item in temp_list:
+                if temp_list.count(item) >= 4:
+                    print '按键精灵出现问题'
+                    Logger_Error_file.error('按键精灵出现问题')
+                    while_str = False
+                    break
+                else:
+                    seeknum = seek_number(new_log_file,key_name_createmeeting)
+            if seeknum == 44:
                 print '按键精灵出现问题'
                 Logger_Error_file.error('按键精灵出现问题')
                 while_str = False
                 break
             else:
-                seeknum = seek_number(new_log_file,key_name_createmeeting)
-        if seeknum == 44:
-            print '按键精灵出现问题'
-            Logger_Error_file.error('按键精灵出现问题')
-            while_str = False
-            break
-        else:
-            response_str = next_str(new_log_file, seeknum, key_name_createmeetingresponse)
-            # 将iso-8859-1的编码转换为utf-8编码
-            cutstr = cut_str(response_str).decode('iso-8859-1').encode('utf8')
-            result = is_result(cutstr)
-            if result == 444:
-                print '大网会议创建失败'
-                Logger_Error_file.error('大网会议创建失败')
-                while_str = False
-                break
-            else:
-                if while_str == False:
-                    pass
+                response_str = next_str(new_log_file, seeknum, key_name_createmeetingresponse)
+                # 将iso-8859-1的编码转换为utf-8编码
+                cutstr = cut_str(response_str).decode('iso-8859-1').encode('utf8')
+                result = is_result(cutstr)
+                if result == 444:
+                    print '大网会议创建失败'
+                    Logger_Error_file.error('大网会议创建失败')
+                    while_str = False
+                    break
                 else:
-                    print '大网会议创建成功'
-                    Logger_Info_file.info('大网会议创建成功')
-        time.sleep(5)
+                    if while_str == False:
+                        pass
+                    else:
+                        print '大网会议创建成功'
+                        Logger_Info_file.info('大网会议创建成功')
+            time.sleep(5)
+    except Exception,e:
+        Logger_Error_file.exception(e)
