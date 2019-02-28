@@ -16,8 +16,26 @@ from common.logger import logger
 Logger_Info_file = logger("INFO")
 Logger_Error_file = logger("ERROR")
 
+#去除BOM_UTF8编码的\xef\xbb\xbf
+def DeleteBOM_UTF8(file_name):
+    file_temp = []
+    f = open(file_name,'r')
+    for line in f.readlines():
+        if '\xef\xbb\xbf' in line:
+            data = line.replace('\xef\xbb\xbf','')
+        else:
+            data = line
+        file_temp.append(data)
+    fw = open(file_name,'w')
+    fw.truncate()
+    for item in file_temp:
+        fw.writelines(item)
+    fw.close()
+    f.close()
+
 #获取配置文件
 file_path = os.path.join(os.path.abspath('conf'),'setting.ini')
+DeleteBOM_UTF8(file_path)
 conf = ConfigParser.ConfigParser()
 conf.read(file_path)
 dir_name = conf.get('FILE','dir')
