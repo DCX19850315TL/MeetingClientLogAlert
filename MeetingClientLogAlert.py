@@ -161,9 +161,6 @@ def stop_ajjl_jhy(ajjl):
     os.system('taskkill /F /IM X86AutoUpdateService.exe')
     os.system('taskkill /F /IM %s' % (ajjl.decode('utf-8').encode('GBK')))
 
-#stop_ajjl_jhy(anjianjingling)
-#start_ajjl()
-
 if __name__ == '__main__':
     try:
         start_time = int(time.time())
