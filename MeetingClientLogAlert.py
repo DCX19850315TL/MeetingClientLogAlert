@@ -61,6 +61,7 @@ count_num = int(conf.get('TIME_NUMBER','COUNT_NUMBER'))
 count_wait_time = int(conf.get('TIME_NUMBER','COUNT_WAIT_TIME'))
 interval_key_time = int(conf.get('TIME_NUMBER','INTERVAL_KEY_TIME'))
 anjianjingling_exe = conf.get('exe','anjianjingling')
+anjianjingling = conf.get('exe','anjianjingling_exe')
 restart_time = int(conf.get('exe','restart_time'))
 
 #找到目录下指定文件名的最新日志文件
@@ -155,12 +156,12 @@ def start_ajjl():
     anjianjingling_exe_path = unicode(anjianjingling_exe,"utf-8")
     win32api.ShellExecute(0, 'open', anjianjingling_exe_path, '','',1)
 
-def stop_ajjl_jhy():
+def stop_ajjl_jhy(ajjl):
     os.system('taskkill /F /IM X1Box_x86.exe')
     os.system('taskkill /F /IM X86AutoUpdateService.exe')
-    os.system('taskkill /F /IM %s' % ('按键精灵2014.exe'.decode('utf-8').encode('GBK')))
+    os.system('taskkill /F /IM %s' % (ajjl.decode('utf-8').encode('GBK')))
 
-#stop_ajjl_jhy()
+#stop_ajjl_jhy(anjianjingling)
 #start_ajjl()
 
 if __name__ == '__main__':
@@ -227,7 +228,7 @@ if __name__ == '__main__':
                                 Logger_Info_file.info('大网会议创建成功')
                     time.sleep(interval_time - time_i)
                     if stop_time - start_time > restart_time:
-                        stop_ajjl_jhy()
+                        stop_ajjl_jhy(anjianjingling)
                         time.sleep(2)
                         start_ajjl()
                         start_time = int(time.time())
