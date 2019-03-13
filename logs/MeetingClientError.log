@@ -322,3 +322,19 @@ Traceback (most recent call last):
   File "C:/Users/tangl/PycharmProjects/MeetingClientLogAlert/MeetingClientLogAlert.py", line 117, in cut_str
     str_1 = str.replace("$@$","")
 AttributeError: 'NoneType' object has no attribute 'replace'
+2019-03-13 18:00:23 MeetingClientLogAlert.py(250 - MainProcess - MainThread - <module>): ERROR 日志目录下面没有日志文件,请查看按键精灵是否正常运行脚本
+2019-03-13 18:00:28 MeetingClientLogAlert.py(250 - MainProcess - MainThread - <module>): ERROR 日志目录下面没有日志文件,请查看按键精灵是否正常运行脚本
+2019-03-13 18:00:33 MeetingClientLogAlert.py(250 - MainProcess - MainThread - <module>): ERROR 日志目录下面没有日志文件,请查看按键精灵是否正常运行脚本
+2019-03-13 18:00:38 MeetingClientLogAlert.py(250 - MainProcess - MainThread - <module>): ERROR 日志目录下面没有日志文件,请查看按键精灵是否正常运行脚本
+2019-03-13 18:00:43 MeetingClientLogAlert.py(250 - MainProcess - MainThread - <module>): ERROR 日志目录下面没有日志文件,请查看按键精灵是否正常运行脚本
+2019-03-13 18:00:48 MeetingClientLogAlert.py(250 - MainProcess - MainThread - <module>): ERROR 日志目录下面没有日志文件,请查看按键精灵是否正常运行脚本
+2019-03-13 18:00:53 MeetingClientLogAlert.py(250 - MainProcess - MainThread - <module>): ERROR 日志目录下面没有日志文件,请查看按键精灵是否正常运行脚本
+2019-03-13 18:00:58 MeetingClientLogAlert.py(250 - MainProcess - MainThread - <module>): ERROR 日志目录下面没有日志文件,请查看按键精灵是否正常运行脚本
+2019-03-13 18:01:03 MeetingClientLogAlert.py(250 - MainProcess - MainThread - <module>): ERROR 日志目录下面没有日志文件,请查看按键精灵是否正常运行脚本
+2019-03-13 18:01:08 MeetingClientLogAlert.py(250 - MainProcess - MainThread - <module>): ERROR 日志目录下面没有日志文件,请查看按键精灵是否正常运行脚本
+2019-03-13 18:01:40 MeetingClientLogAlert.py(250 - MainProcess - MainThread - <module>): ERROR 日志目录下面没有日志文件,请查看按键精灵是否正常运行脚本
+2019-03-13 18:01:45 MeetingClientLogAlert.py(250 - MainProcess - MainThread - <module>): ERROR 日志目录下面没有日志文件,请查看按键精灵是否正常运行脚本
+2019-03-13 18:02:16 MeetingClientLogAlert.py(250 - MainProcess - MainThread - <module>): ERROR 日志目录下面没有日志文件,请查看按键精灵是否正常运行脚本
+2019-03-13 18:02:21 MeetingClientLogAlert.py(250 - MainProcess - MainThread - <module>): ERROR 日志目录下面没有日志文件,请查看按键精灵是否正常运行脚本
+2019-03-13 18:02:55 MeetingClientLogAlert.py(250 - MainProcess - MainThread - <module>): ERROR 日志目录下面没有日志文件,请查看按键精灵是否正常运行脚本
+2019-03-13 18:03:00 MeetingClientLogAlert.py(250 - MainProcess - MainThread - <module>): ERROR 日志目录下面没有日志文件,请查看按键精灵是否正常运行脚本

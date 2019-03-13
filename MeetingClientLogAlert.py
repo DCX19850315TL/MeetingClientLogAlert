@@ -4,9 +4,19 @@
 @auther: tanglei
 @contact: tanglei_0315@163.com
 @file: MeetingClientLogAlert.py
+@time: 2019/3/13 16:36
+'''
+#!/usr/bin/env python
+#_*_ coding:utf-8 _*_
+'''
+@auther: tanglei
+@contact: tanglei_0315@163.com
+@file: MeetingClientLogAlert.py
 @time: 2019/2/22 11:20
 '''
-import os,sys,stat
+import os
+import sys
+import stat
 import re
 import ConfigParser
 import json
@@ -16,13 +26,9 @@ import codecs
 import win32api
 import win32process
 
-from common.logger import logger
-from ctypes import cdll
+file_path = os.path.join(os.path.abspath('conf'),'setting.ini')
 
-Logger_Info_file = logger("INFO")
-Logger_Error_file = logger("ERROR")
-
-#去除BOM_UTF8编码的\xef\xbb\xbf的第一种方法
+#去除BOM_UTF8编码的\xef\xbb\xbf的第一种方法,经测试可以使用，但是最好将配置文件和函数写在程序的最上面
 def DeleteBOM_UTF8(file_name):
     file_temp = []
     f = open(file_name,'r')
@@ -47,8 +53,14 @@ def remove_BOM(config_path):
     content = re.sub(r"\xef\xbb\xbf","", content)
     open(config_path, 'w').write(content)
 
+DeleteBOM_UTF8(file_path)
+
+from common.logger import logger
+
+Logger_Info_file = logger("INFO")
+Logger_Error_file = logger("ERROR")
+
 #获取配置文件
-file_path = os.path.join(os.path.abspath('conf'),'setting.ini')
 conf = ConfigParser.ConfigParser()
 conf.read(file_path)
 dir_name = conf.get('FILE','dir')
