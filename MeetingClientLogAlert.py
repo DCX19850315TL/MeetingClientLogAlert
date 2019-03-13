@@ -12,6 +12,10 @@ import ConfigParser
 import json
 import time
 import shutil
+import codecs
+import win32api
+import win32process
+
 from common.logger import logger
 from ctypes import cdll
 
@@ -45,7 +49,6 @@ def remove_BOM(config_path):
 
 #获取配置文件
 file_path = os.path.join(os.path.abspath('conf'),'setting.ini')
-remove_BOM(file_path)
 conf = ConfigParser.ConfigParser()
 conf.read(file_path)
 dir_name = conf.get('FILE','dir')
@@ -57,6 +60,8 @@ interval_time = int(conf.get('TIME_NUMBER','INTERVAL_TIME'))
 count_num = int(conf.get('TIME_NUMBER','COUNT_NUMBER'))
 count_wait_time = int(conf.get('TIME_NUMBER','COUNT_WAIT_TIME'))
 interval_key_time = int(conf.get('TIME_NUMBER','INTERVAL_KEY_TIME'))
+anjianjingling_exe = conf.get('exe','anjianjingling')
+restart_time = int(conf.get('exe','restart_time'))
 
 #找到目录下指定文件名的最新日志文件
 def find_new_file(dir,file):
@@ -146,8 +151,22 @@ def count_file(file):
         f.close()
         return count
 
+def start_ajjl():
+    anjianjingling_exe_path = unicode(anjianjingling_exe,"utf-8")
+    win32api.ShellExecute(0, 'open', anjianjingling_exe_path, '','',1)
+
+def stop_ajjl_jhy():
+    os.system('taskkill /F /IM X1Box_x86.exe')
+    os.system('taskkill /F /IM X86AutoUpdateService.exe')
+    os.system('taskkill /F /IM %s' % ('按键精灵2014.exe'.decode('utf-8').encode('GBK')))
+
+#stop_ajjl_jhy()
+#start_ajjl()
+
 if __name__ == '__main__':
     try:
+        start_time = int(time.time())
+        print '按键精灵第一次启动的时间:%s'.decode('utf-8').encode('GBK') % (time.strftime("%Y-%m-%d %H:%M:%S"))
         try:
             remove_dir_file(dir_name)
         except Exception,e:
@@ -155,13 +174,14 @@ if __name__ == '__main__':
         temp_list = []
         while_str = True
         while while_str:
+            stop_time = int(time.time())
             if os.listdir(dir_name):
                 new_log_file = find_new_file(dir_name, file_name)
-                print '新的文件绝对路径:%s' % (new_log_file)
+                print '新的文件绝对路径:%s'.decode('utf-8').encode('GBK') % (new_log_file)
                 Logger_Info_file.info('新的文件绝对路径:%s' % (new_log_file))
                 try:
                     if get_os_time() - create_file_time(new_log_file) > os_compare_file_time:
-                        print '没有新的日志文件创建，所以按键精灵出现问题,重复的文件名为%s' % (new_log_file)
+                        print '没有新的日志文件创建，所以按键精灵出现问题,重复的文件名为%s'.decode('utf-8').encode('GBK') % (new_log_file)
                         Logger_Error_file.error('没有新的日志文件创建，所以按键精灵出现问题,重复的文件名为%s' % (new_log_file))
                         while_str = False
                         break
@@ -170,14 +190,14 @@ if __name__ == '__main__':
                             count = count_file(new_log_file)
                             if count >= count_num:
                                 seeknum = seek_number(new_log_file, key_name_createmeeting)
-                                print '日志行数为%s行后，进行关键字查询' % (count)
+                                print '日志行数为%s行后，进行关键字查询'.decode('utf-8').encode('GBK') % (count)
                                 Logger_Info_file.info('日志行数为%s行后，进行关键字查询' % (count))
                                 time_i = item
                                 break
                             else:
                                 time.sleep(interval_key_time)
                                 if item == count_wait_time - 1 and count <= count_num:
-                                    print '%s秒内的日志行数无法满足关键字查询的条件，请查看一下按键精灵和网络是否正常' % (count_wait_time)
+                                    print '%s秒内的日志行数无法满足关键字查询的条件，请查看一下按键精灵和网络是否正常'.decode('utf-8').encode('GBK') % (count_wait_time)
                                     Logger_Error_file.error('%s秒内的日志行数无法满足关键字查询的条件，请查看一下按键精灵和网络是否正常' % (count_wait_time))
                                     while_str = False
                                     break
@@ -185,7 +205,7 @@ if __name__ == '__main__':
                     Logger_Error_file.exception(e)
                 try:
                     if seeknum == 44:
-                        print '没有关键字的出现，说明没有发起创建会议的动作，所以按键精灵出现问题,对应的客户端日志为%s' % (new_log_file)
+                        print '没有关键字的出现，说明没有发起创建会议的动作，所以按键精灵出现问题,对应的客户端日志为%s'.decode('utf-8').encode('GBK') % (new_log_file)
                         Logger_Error_file.error('没有关键字的出现，说明没有发起创建会议的动作，所以按键精灵出现问题,对应的客户端日志为%s' % (new_log_file))
                         while_str = False
                         break
@@ -195,7 +215,7 @@ if __name__ == '__main__':
                         cutstr = cut_str(response_str).decode('iso-8859-1').encode('utf8')
                         result = is_result(cutstr)
                         if result == 444:
-                            print '根据返回值不等于0，所以大网会议创建失败,对应的客户端日志为%s' % (new_log_file)
+                            print '根据返回值不等于0，所以大网会议创建失败,对应的客户端日志为%s'.decode('utf-8').encode('GBK') % (new_log_file)
                             Logger_Error_file.error('根据返回值不等于0，所以大网会议创建失败,对应的客户端日志为%s' % (new_log_file))
                             while_str = False
                             break
@@ -203,13 +223,20 @@ if __name__ == '__main__':
                             if while_str == False:
                                 pass
                             else:
-                                print '大网会议创建成功'
+                                print '大网会议创建成功'.decode('utf-8').encode('GBK')
                                 Logger_Info_file.info('大网会议创建成功')
                     time.sleep(interval_time - time_i)
+                    if stop_time - start_time > restart_time:
+                        stop_ajjl_jhy()
+                        time.sleep(2)
+                        start_ajjl()
+                        start_time = int(time.time())
+                        print '按键精灵和极会议客户端进行了重启操作,重新启动的时间:%s'.decode('utf-8').encode('GBK') % (time.strftime("%Y-%m-%d %H:%M:%S"))
+                        Logger_Info_file.info('按键精灵和极会议客户端进行了重启操作,重新启动的时间:%s' % (time.strftime("%Y-%m-%d %H:%M:%S")))
                 except Exception,e:
                     Logger_Error_file.exception(e)
             else:
-                print '日志目录下面没有日志文件,请查看按键精灵是否正常运行脚本'
+                print '日志目录下面没有日志文件,请查看按键精灵是否正常运行脚本'.decode('utf-8').encode('GBK')
                 Logger_Error_file.error('日志目录下面没有日志文件,请查看按键精灵是否正常运行脚本')
                 time.sleep(5)
     except Exception,e:
