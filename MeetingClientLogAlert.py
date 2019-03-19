@@ -197,6 +197,7 @@ if __name__ == '__main__':
         ping_result = ping_netCheck('www.baidu.com')
         while while_str:
             stop_time = int(time.time())
+            #重启按键精灵优化
             if ping_result == True:
                 if get_new_file_and_timestamp(file_key_file(dir_name,file_name,key_name_createmeetingresponse)) != '14':
                     new_log_file = get_new_file_and_timestamp(file_key_file(dir_name,file_name,key_name_createmeetingresponse))[1]
