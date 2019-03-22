@@ -26,6 +26,9 @@ import codecs
 import win32api
 import win32process
 from playsound import playsound
+import smtplib
+from email.mime.text import MIMEText
+from email.header import Header
 
 file_path = os.path.join(os.path.abspath('conf'),'setting.ini')
 #ajjl_warning_sound = os.path.join(os.path.abspath('mp3'),)
@@ -59,6 +62,7 @@ def remove_BOM(config_path):
 DeleteBOM_UTF8(file_path)
 
 from common.logger import logger
+from aip import AipSpeech
 
 Logger_Info_file = logger("INFO")
 Logger_Error_file = logger("ERROR")
@@ -203,7 +207,7 @@ def restart_ajjl():
 
 #调用百度的接口，将文字转换成语音
 def text2audio(text,mp3_name):
-    from aip import AipSpeech
+
     """ 你的 APPID AK SK """
     APP_ID = '15801962'
     API_KEY = 'iIieqWm7P2baOgh0e2veDzAr'
@@ -259,6 +263,33 @@ def check_mp3(mp3_text,mp3_name):
         if response == 123:
             text2audio(mp3_text, mp3_name)
 
+#定义发送邮件的方法
+def send_mail(title,content):
+
+    # 第三方 SMTP 服务
+    mail_host = "smtp.139.com"  # 设置服务器
+    mail_user = "15810062500"  # 用户名
+    mail_pass = "TL1qaz123"  # 口令
+
+    sender = '15810062500@139.com'
+    receivers = ['tanglei@butel.com']  # 接收邮件，可设置为你的QQ邮箱或者其他邮箱
+
+    #content = 'Python Send Mail !'
+    #title = 'Python SMTP Mail Test'  # 邮件主题
+    message = MIMEText(content, 'plain', 'utf-8')  # 内容, 格式, 编码
+    message['From'] = "{}".format(sender)
+    message['To'] = ",".join(receivers)
+    message['Subject'] = title
+
+    try:
+        smtpObj = smtplib.SMTP()
+        smtpObj.connect(mail_host, 25)  # 41000 为 SMTP 端口号
+        smtpObj.login(mail_user, mail_pass)
+        smtpObj.sendmail(sender, receivers, message.as_string())
+        print "邮件发送成功".decode('utf-8').encode('GBK')
+    except smtplib.SMTPException,e:
+        print "Error: 无法发送邮件".decode('utf-8').encode('GBK')
+
 if __name__ == '__main__':
     try:
         start_time = int(time.time())
@@ -293,6 +324,7 @@ if __name__ == '__main__':
                                 stop_ajjl_jhy(anjianjingling)
                                 print '按键精灵连续重启三次，指针失效无法正常进行会议终端的操作'.decode('utf-8').encode('GBK')
                                 Logger_Error_file.error('按键精灵连续重启三次，指针失效无法正常进行会议终端的操作')
+                                send_mail('按键精灵多次重启','按键精灵连续重启三次，指针失效无法正常进行会议终端的操作')
                                 while True:
                                     playsound(ajjl_error_mp3)
                                     time.sleep(1200)
@@ -311,6 +343,7 @@ if __name__ == '__main__':
                             if key_result == 444:
                                 print '根据返回值不等于0，所以大网会议创建失败,对应的客户端日志为%s'.decode('utf-8').encode('GBK') % (new_log_file)
                                 Logger_Error_file.error('根据返回值不等于0，所以大网会议创建失败,对应的客户端日志为%s' % (new_log_file))
+                                send_mail('创建会议失败','根据返回值不等于0，所以大网会议创建失败,对应的客户端日志为%s' % (new_log_file))
                                 for i in range(3):
                                     playsound(meeting_mp3)
                                     time.sleep(5)
